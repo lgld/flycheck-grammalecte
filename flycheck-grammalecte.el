@@ -69,7 +69,7 @@
   (define-obsolete-function-alias (car spec) (cadr spec) "2.0"))
 
 
-;; Make the compile happy about grammalecte lib
+;; Make the compiler happy about grammalecte lib
 (declare-function grammalecte--version "grammalecte")
 (declare-function grammalecte--augment-pythonpath-if-needed "grammalecte")
 (eval-when-compile
