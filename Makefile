@@ -19,9 +19,7 @@ grammalecte-loaddefs.el:
 	rm -f $@
 	$(EMACS) -L $(PWD) \
 		--eval "(setq-default backup-inhibited t)" \
-		--eval "(setq generated-autoload-file \"$(PWD)/$@\")" \
-		--eval "(update-directory-autoloads \"$(PWD)\")"
-	sed -i "s/^;;; Code:$$/;;; Code:\n\n$(subst ., ,$(LOADDEFS_TPL))/" $@
+		--eval "(loaddefs-generate \"$(PWD)\" \"$(PWD)/$@\" nil \"$(subst ., ,$(LOADDEFS_TPL))\")"
 
 grammalecte.elc:
 	$(EMACS) -f batch-byte-compile grammalecte.el
