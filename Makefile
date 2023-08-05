@@ -46,7 +46,7 @@ grammalecte:
 
 .PHONY: demo demo-deps demo-no-grammalecte demo-use-package
 
-EMACS_DEMO = HOME=$(PWD)/test-home emacs --debug-init
+EMACS_DEMO = emacs --init-directory "$(PWD)/test-home" --debug-init
 
 demo: demo-deps grammalecte
 	$(EMACS_DEMO) -l test-home/classic.el example.org
