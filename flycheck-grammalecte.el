@@ -79,7 +79,7 @@
 ;;;; Configuration options:
 
 (defgroup flycheck-grammalecte nil
-  "Flycheck Grammalecte options"
+  "Flycheck Grammalecte options."
   :group 'flycheck-options
   :group 'grammalecte)
 
@@ -153,19 +153,19 @@ As these patterns will be used by the underlying python script,
 they must be python Regular Expressions (See URL
 `https://docs.python.org/3.5/library/re.html#regular-expression-syntax').
 
-Escape character `\\' must be doubled twice: one time for Emacs
+Escape character \\ must be doubled twice: one time for Emacs
 and one time for python.  For example, to exclude LaTeX math
 formulas, one can use :
 
     (setq flycheck-grammalecte-filters
-          '(\"\\$.*?\\$\"
+          \\='(\"\\$.*?\\$\"
             \"(?s)\\\\begin{equation}.*?\\\\end{equation}\"))
 
 For simple use case, you can try to use the function
 `flycheck-grammalecte--convert-elisp-rx-to-python'.
 
 Filters are applied sequentially.  In practice all characters of
-the matching pattern are replaced by `█', which are ignored by
+the matching pattern are replaced by █, which are ignored by
 grammalecte.
 
 This patterns are always sent to Grammalecte.  See the variable
@@ -235,7 +235,7 @@ another.  This activation is only done once when the function
 
 This function is called without arguments and shall return non-nil if
 flycheck-grammalecte shall be used to check the current buffer.  Otherwise it
-shall return nil. This function is only called in matching major modes (see
+shall return nil.  This function is only called in matching major modes (see
 `flycheck-grammalecte-enabled-modes'.
 
 For example, if you only want to have flycheck-grammalecte in french
@@ -243,14 +243,14 @@ documents, you may want to use something like:
 
     (setq flycheck-grammalecte-predicate
           (lambda ()
-            (or (and (derived-mode-p 'org-mode)
+            (or (and (derived-mode-p \\='org-mode)
                      (equal \"fr\"
-                            (or (cadar (org-collect-keywords '(\"LANGUAGE\")))
+                            (or (cadar (org-collect-keywords \\='(\"LANGUAGE\")))
                                 (bound-and-true-p
                                   org-export-default-language))))
-                (and (boundp 'ispell-local-dictionary)
+                (and (boundp \\='ispell-local-dictionary)
                      (member ispell-local-dictionary
-                             '(\"fr\" \"francais7\" \"francais-tex\"))))))"
+                             \\='(\"fr\" \"francais7\" \"francais-tex\"))))))"
   :type 'function
   :package-version "2.0"
   :group 'flycheck-grammalecte)
@@ -286,7 +286,7 @@ This function will return
 
 See URL
 `https://docs.python.org/3.5/library/re.html#regular-expression-syntax'
-and Info node `(elisp)Syntax of Regular Expressions'."
+and Info node `Regexps'."
   (let ((convtable '(("\\\\(" . "(")
                      ("\\\\)" . ")")
                      ("\\\\|" . "|")

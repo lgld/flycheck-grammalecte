@@ -40,7 +40,7 @@
 ;;;; Configuration options:
 
 (defgroup grammalecte nil
-  "Grammalecte options"
+  "Grammalecte options."
   :group 'i18n)
 
 (defconst grammalecte--site-directory (file-name-directory load-file-name)
@@ -535,18 +535,25 @@ The word is not removed from the `kill-ring'."
     map)
   "Keymap for `grammalecte-mode'.")
 
+;; Make the compiler happy about old stuff
+(declare-function linum-mode "linum")
+
 (define-derived-mode grammalecte-mode special-mode
   "Grammalecte mode"
-  "Major mode used to display results of a synonym research or
-conjugation table.
+  "Major mode used to display results of a synonym research or conjugation table.
+
 The buffer is read-only.
-Type o to go back to your previous buffer.
+
+Type \\[other-window] to go back to your previous buffer.
+
 Type \\[grammalecte-kill-ring-save] to copy word at point in the
   grammalecte buffer in the `kill-ring' (and let you do whatever you
   want with it after).
+
 Type \\[grammalecte-save-and-replace] to replace the word at point in
   the buffer you came from by the one at point in the grammalecte
   buffer.  The word is not removed from the `kill-ring'.
+
 Click \\[grammalecte-mouse-save-and-replace] to replace the word at
   point in the buffer you came from by the one you just click in the
   grammalecte buffer.  The word is not removed from the `kill-ring'."
