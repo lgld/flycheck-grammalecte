@@ -55,7 +55,7 @@ demo-no-grammalecte: demo-deps
 demo-use-package: demo-deps use-package-master
 	$(EMACS_DEMO) -l test-home/use-package.el example.org
 
-demo-deps: cleandemo build autoloads epl-master pkg-info-master
+demo-deps: cleandemo build autoloads epl-master
 	touch debug
 
 cleandemo:
@@ -67,7 +67,6 @@ cleandemo:
 
 use-package_author = jwiegley
 epl_author = cask
-pkg-info_author = emacsorphanage
 dash.el_author = magnars
 flycheck_author = flycheck
 
