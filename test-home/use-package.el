@@ -1,4 +1,3 @@
-(add-to-list 'load-path "use-package-master")
 (require 'use-package)
 
 (use-package flycheck-grammalecte

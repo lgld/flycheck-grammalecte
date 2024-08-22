@@ -52,7 +52,7 @@ demo: demo-deps grammalecte
 demo-no-grammalecte: demo-deps
 	$(EMACS_DEMO) -l test-home/classic.el example.org
 
-demo-use-package: demo-deps use-package-master
+demo-use-package: demo-deps
 	$(EMACS_DEMO) -l test-home/use-package.el example.org
 
 demo-deps: cleandemo build autoloads epl-master
@@ -65,7 +65,6 @@ cleandemo:
 
 ######### Dependencies
 
-use-package_author = jwiegley
 epl_author = cask
 dash.el_author = magnars
 flycheck_author = flycheck
