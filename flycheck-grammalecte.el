@@ -8,7 +8,7 @@
 ;;         Étienne Deparis <etienne@depar.is>
 ;; Created: 21 February 2017
 ;; Version: 2.4
-;; Package-Requires: ((emacs "26.1") (flycheck "26"))
+;; Package-Requires: ((emacs "26.1") (flycheck "32"))
 ;; Keywords: i18n, text
 ;; Homepage: https://git.umaneti.net/flycheck-grammalecte/
 
@@ -254,15 +254,10 @@ documents, you may want to use something like:
   :group 'flycheck-grammalecte)
 
 (defconst flycheck-grammalecte--error-patterns
-  (if (< (string-to-number (flycheck-version nil)) 32)
-      '((warning line-start "grammaire|" (message) "|" line "|"
-                 (1+ digit) "|" column "|" (1+ digit) line-end)
-        (info line-start "orthographe|" (message) "|" line "|"
-              (1+ digit) "|" column "|" (1+ digit) line-end))
-    '((warning line-start "grammaire|" (message) "|" line "|" end-line
-               "|" column "|" end-column line-end)
-      (info line-start "orthographe|" (message) "|" line "|" end-line
-            "|" column "|" end-column line-end)))
+  '((warning line-start "grammaire|" (message) "|" line "|" end-line
+             "|" column "|" end-column line-end)
+    (info line-start "orthographe|" (message) "|" line "|" end-line
+          "|" column "|" end-column line-end))
   "External python command output matcher for Flycheck.
 
 It uses `rx' keywords, with some specific ones defined by Flycheck in
@@ -326,27 +321,11 @@ and Info node `Regexps'."
 
 (defun flycheck-grammalecte--patch-flycheck-mode-map ()
   "Add new commands to `flycheck-mode-map' if possible."
-  (let ((flycheck-version-number
-         (string-to-number (flycheck-version nil))))
-    (if (< flycheck-version-number 32)
-        (let ((warn-user-about-flycheck
-               (lambda (_arg)
-                 (display-warning
-                  'flycheck-grammalecte
-                  (format "Le remplacement des erreurs ne fonctionne qu'avec flycheck >= 32 (vous utilisez la version %s)."
-                          flycheck-version-number)))))
-          ;; Desactivate corrections methods
-          (advice-add 'flycheck-grammalecte-correct-error-at-click
-                      :override
-                      warn-user-about-flycheck)
-          (advice-add 'flycheck-grammalecte-correct-error-at-point
-                      :override
-                      warn-user-about-flycheck))
-      ;; Add our fixers to right click and C-c ! g
-      (define-key flycheck-mode-map (kbd "<mouse-3>")
-        #'flycheck-grammalecte-correct-error-at-click)
-      (define-key flycheck-command-map "g"
-        #'flycheck-grammalecte-correct-error-at-point))))
+  ;; Add our fixers to right click and C-c ! g
+  (define-key flycheck-mode-map (kbd "<mouse-3>")
+              #'flycheck-grammalecte-correct-error-at-click)
+  (define-key flycheck-command-map "g"
+              #'flycheck-grammalecte-correct-error-at-point))
 
 (defun flycheck-grammalecte--prepare-arg-list (arg items)
   "Build an arguments list for ARG from ITEMS elements.
