@@ -109,9 +109,10 @@ If this value is 0 or negative, no check will never be attempt."
   "Return the content of `grammalecte-settings-file'."
   (when (file-exists-p grammalecte-settings-file)
     (with-temp-buffer
-	  (insert-file-contents grammalecte-settings-file)
-	  (goto-char (point-min))
-	  (ignore-errors (read (current-buffer))))))
+      (ignore-errors ;; file might be garbage
+	    (insert-file-contents grammalecte-settings-file)
+	    (goto-char (point-min))
+	    (read (current-buffer))))))
 
 (defun grammalecte--augment-pythonpath-if-needed ()
   "Augment PYTHONPATH with the install directory of grammalecte.
