@@ -47,13 +47,13 @@ grammalecte:
 EMACS_DEMO = emacs --init-directory "$(PWD)/test-home" --debug-init
 
 demo: demo-deps grammalecte
-	$(EMACS_DEMO) -l test-home/classic.el example.org
+	$(EMACS_DEMO) -l test-home/classic.el example.org example.tex
 
 demo-no-grammalecte: demo-deps
-	$(EMACS_DEMO) -l test-home/classic.el example.org
+	$(EMACS_DEMO) -l test-home/classic.el example.org example.tex
 
 demo-use-package: demo-deps
-	$(EMACS_DEMO) -l test-home/use-package.el example.org
+	$(EMACS_DEMO) -l test-home/use-package.el example.org example.tex
 
 demo-deps: cleandemo build autoloads epl-master
 	touch debug
