@@ -1,11 +1,11 @@
 ;;; flycheck-grammalecte.el --- Integrate Grammalecte with Flycheck -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2018 Étienne Deparis
+;; Copyright (C) 2018 Étienne Pflieger
 ;; Copyright (C) 2017 Guilhem Doulcier
 
-;; Maintainer: Étienne Deparis <etienne@depar.is>
+;; Maintainer: Étienne Pflieger
 ;; Author: Guilhem Doulcier <guilhem.doulcier@espci.fr>
-;;         Étienne Deparis <etienne@depar.is>
+;;         Étienne Pflieger <etienne@pflieger.bzh>
 ;; Created: 21 February 2017
 ;; Version: 2.4
 ;; Package-Requires: ((emacs "26.1") (flycheck "32"))

@@ -1,8 +1,8 @@
 ;;; grammalecte.el --- Wrapper for Grammalecte -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2018 Étienne Deparis
+;; Copyright (C) 2018 Étienne Pflieger
 
-;; Author: Étienne Deparis <etienne@depar.is>
+;; Author: Étienne Pflieger <etienne@pflieger.bzh>
 ;; Created: 21 April 2021
 ;; Version: 2.4
 ;; Package-Requires: ((emacs "26.1"))
