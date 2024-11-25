@@ -413,11 +413,10 @@ other buffer by the copied word."
 
 (defun grammalecte--delete-word-at-point ()
   "Delete the word around point, or region if one is active."
-  (let ((bounds (if (use-region-p)
-                    (cons (region-beginning) (region-end))
-                  (bounds-of-thing-at-point 'word))))
-    (when bounds
-      (delete-region (car bounds) (cdr bounds)))))
+  (when-let ((bounds (if (use-region-p)
+                         (cons (region-beginning) (region-end))
+                       (bounds-of-thing-at-point 'word))))
+    (delete-region (car bounds) (cdr bounds))))
 
 (defun grammalecte--propertize-conjugation-buffer ()
   "Propertize some important words in the conjugation buffer."
@@ -597,10 +596,9 @@ See URL `https://www.cnrtl.fr/definition/'.
 (defun grammalecte-define-at-point ()
   "Find definitions for the french word at point."
   (interactive)
-  (let ((word (thing-at-point 'word 'no-properties)))
-    (if word
-        (grammalecte-define word)
-      (call-interactively 'grammalecte-define))))
+  (if-let ((word (thing-at-point 'word 'no-properties)))
+      (grammalecte-define word)
+    (call-interactively 'grammalecte-define)))
 
 
 
@@ -627,10 +625,9 @@ The found words are then displayed in a new buffer in another window.
 (defun grammalecte-find-synonyms-at-point ()
   "Find french synonyms and antonyms for the word at point."
   (interactive)
-  (let ((word (thing-at-point 'word 'no-properties)))
-    (if word
-        (grammalecte-find-synonyms word)
-      (call-interactively 'grammalecte-find-synonyms))))
+  (if-let ((word (thing-at-point 'word 'no-properties)))
+      (grammalecte-find-synonyms word)
+    (call-interactively 'grammalecte-find-synonyms)))
 
 
 

@@ -384,37 +384,35 @@ flycheck-grammalecte can be used or not."
 This method replace the word at POS by the first suggestion coming from
 flycheck, if any."
   (interactive "d")
-  (let ((first-err (car-safe (flycheck-overlay-errors-at pos))))
-    (when first-err
-      (flycheck-grammalecte--fix-error
-       first-err
-       (cadr (flycheck-grammalecte--split-error-message first-err))))))
+  (when-let ((first-err (car-safe (flycheck-overlay-errors-at pos))))
+    (flycheck-grammalecte--fix-error
+     first-err
+     (cadr (flycheck-grammalecte--split-error-message first-err)))))
 
 (defun flycheck-grammalecte-correct-error-at-click (event)
   "Popup a menu to help correct error under mouse pos defined in EVENT."
   (interactive "e")
   (save-excursion
     (mouse-set-point event)
-    (let ((first-err (car-safe (flycheck-overlay-errors-at (point)))))
-      (when first-err
-        (let* ((region (flycheck-error-region-for-mode first-err major-mode))
-               (word (buffer-substring-no-properties (car region) (cdr region)))
-               (splitted-err (flycheck-grammalecte--split-error-message first-err))
-               repl-menu)
-          (setq repl-menu
-                (dolist (repl (cdr splitted-err) repl-menu)
-                  (push (list repl repl) repl-menu)))
-          ;; Add a reminder of the error message
-          (push (car splitted-err) repl-menu)
-          (flycheck-grammalecte--fix-error
-           first-err
-           (car-safe
-            (x-popup-menu
-             event
-             (list
-              (format "Corrections pour %s" word)
-              (cons "Suggestions de Grammalecte" repl-menu))))
-           region))))))
+    (when-let ((first-err (car-safe (flycheck-overlay-errors-at (point)))))
+      (let* ((region (flycheck-error-region-for-mode first-err major-mode))
+             (word (buffer-substring-no-properties (car region) (cdr region)))
+             (splitted-err (flycheck-grammalecte--split-error-message first-err))
+             repl-menu)
+        (setq repl-menu
+              (dolist (repl (cdr splitted-err) repl-menu)
+                (push (list repl repl) repl-menu)))
+        ;; Add a reminder of the error message
+        (push (car splitted-err) repl-menu)
+        (flycheck-grammalecte--fix-error
+         first-err
+         (car-safe
+          (x-popup-menu
+           event
+           (list
+            (format "Corrections pour %s" word)
+            (cons "Suggestions de Grammalecte" repl-menu))))
+         region)))))
 
 
 
