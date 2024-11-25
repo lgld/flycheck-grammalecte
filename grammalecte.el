@@ -5,7 +5,7 @@
 ;; Author: Étienne Pflieger <etienne@pflieger.bzh>
 ;; Created: 21 April 2021
 ;; Version: 2.4
-;; Package-Requires: ((emacs "26.1"))
+;; Package-Requires: ((emacs "29.1"))
 ;; Keywords: i18n, text
 ;; Homepage: https://git.umaneti.net/flycheck-grammalecte/
 
@@ -527,13 +527,11 @@ The word is not removed from the `kill-ring'."
   (grammalecte--kill-ring-save-at-point (point) t))
 
 (defvar grammalecte-mode-map
-  (let ((map (make-sparse-keymap)))
-    (define-key map "o" #'other-window)
-    (define-key map "w" #'grammalecte-kill-ring-save)
-    (define-key map (kbd "<mouse-1>")
-      #'grammalecte-mouse-save-and-replace)
-    (define-key map (kbd "<RET>") #'grammalecte-save-and-replace)
-    map)
+  (define-keymap
+    "o" #'other-window
+    "w" #'grammalecte-kill-ring-save
+    "<mouse-1>" #'grammalecte-mouse-save-and-replace
+    "<RET>" #'grammalecte-save-and-replace)
   "Keymap for `grammalecte-mode'.")
 
 ;; Make the compiler happy about old stuff

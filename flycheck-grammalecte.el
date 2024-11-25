@@ -8,7 +8,7 @@
 ;;         Étienne Pflieger <etienne@pflieger.bzh>
 ;; Created: 21 February 2017
 ;; Version: 2.4
-;; Package-Requires: ((emacs "26.1") (flycheck "32"))
+;; Package-Requires: ((emacs "29.1") (flycheck "32"))
 ;; Keywords: i18n, text
 ;; Homepage: https://git.umaneti.net/flycheck-grammalecte/
 
@@ -322,9 +322,9 @@ and Info node `Regexps'."
 (defun flycheck-grammalecte--patch-flycheck-mode-map ()
   "Add new commands to `flycheck-mode-map' if possible."
   ;; Add our fixers to right click and C-c ! g
-  (define-key flycheck-mode-map (kbd "<mouse-3>")
+  (keymap-set flycheck-mode-map "<mouse-3>"
               #'flycheck-grammalecte-correct-error-at-click)
-  (define-key flycheck-command-map "g"
+  (keymap-set flycheck-command-map "g"
               #'flycheck-grammalecte-correct-error-at-point))
 
 (defun flycheck-grammalecte--prepare-arg-list (arg items)
