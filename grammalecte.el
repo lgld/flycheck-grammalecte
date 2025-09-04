@@ -537,7 +537,7 @@ The word is not removed from the `kill-ring'."
 (declare-function linum-mode "linum")
 
 (define-derived-mode grammalecte-mode special-mode
-  "Grammalecte mode"
+  "Grammalecte"
   "Major mode used to display results of a synonym research or conjugation table.
 
 The buffer is read-only.
