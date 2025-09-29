@@ -398,10 +398,7 @@ flycheck, if any."
       (let* ((region (flycheck-error-region-for-mode first-err major-mode))
              (word (buffer-substring-no-properties (car region) (cdr region)))
              (splitted-err (flycheck-grammalecte--split-error-message first-err))
-             repl-menu)
-        (setq repl-menu
-              (dolist (repl (cdr splitted-err) repl-menu)
-                (push (list repl repl) repl-menu)))
+             (repl-menu (mapcar (lambda (elt) (list elt elt)) (cdr splitted-err))))
         ;; Add a reminder of the error message
         (push (car splitted-err) repl-menu)
         (flycheck-grammalecte--fix-error
