@@ -7,7 +7,7 @@
 ;; Author: Guilhem Doulcier <guilhem.doulcier@espci.fr>
 ;;         Étienne Pflieger <etienne@pflieger.bzh>
 ;; Created: 21 February 2017
-;; Version: 2.4
+;; Version: 2.5
 ;; Package-Requires: ((emacs "29.1") (flycheck "32"))
 ;; Keywords: i18n, text
 ;; Homepage: https://git.umaneti.net/flycheck-grammalecte/
