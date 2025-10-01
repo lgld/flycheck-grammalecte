@@ -4,7 +4,7 @@
 This script display the french conjugation of known verb to
 Grammalecte.  It requires the grammalecte package.
 
-Copyright (C) 2018+ Étienne Deparis <etienne@depar.is>
+Copyright (C) 2018+ Étienne Pflieger <etienne@pflieger.bzh>
 This is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation; either version 3, or (at your option)

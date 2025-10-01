@@ -1,11 +1,11 @@
 ;;; grammalecte.el --- Wrapper for Grammalecte -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2018 Étienne Deparis
+;; Copyright (C) 2018 Étienne Pflieger
 
-;; Author: Étienne Deparis <etienne@depar.is>
+;; Author: Étienne Pflieger <etienne@pflieger.bzh>
 ;; Created: 21 April 2021
-;; Version: 2.4
-;; Package-Requires: ((emacs "26.1"))
+;; Version: 2.5
+;; Package-Requires: ((emacs "29.1"))
 ;; Keywords: i18n, text
 ;; Homepage: https://git.umaneti.net/flycheck-grammalecte/
 
@@ -40,7 +40,7 @@
 ;;;; Configuration options:
 
 (defgroup grammalecte nil
-  "Grammalecte options"
+  "Grammalecte options."
   :group 'i18n)
 
 (defconst grammalecte--site-directory (file-name-directory load-file-name)
@@ -109,9 +109,10 @@ If this value is 0 or negative, no check will never be attempt."
   "Return the content of `grammalecte-settings-file'."
   (when (file-exists-p grammalecte-settings-file)
     (with-temp-buffer
-	  (insert-file-contents grammalecte-settings-file)
-	  (goto-char (point-min))
-	  (ignore-errors (read (current-buffer))))))
+      (ignore-errors ;; file might be garbage
+	    (insert-file-contents grammalecte-settings-file)
+	    (goto-char (point-min))
+	    (read (current-buffer))))))
 
 (defun grammalecte--augment-pythonpath-if-needed ()
   "Augment PYTHONPATH with the install directory of grammalecte.
@@ -412,11 +413,10 @@ other buffer by the copied word."
 
 (defun grammalecte--delete-word-at-point ()
   "Delete the word around point, or region if one is active."
-  (let ((bounds (if (use-region-p)
-                    (cons (region-beginning) (region-end))
-                  (bounds-of-thing-at-point 'word))))
-    (when bounds
-      (delete-region (car bounds) (cdr bounds)))))
+  (when-let ((bounds (if (use-region-p)
+                         (cons (region-beginning) (region-end))
+                       (bounds-of-thing-at-point 'word))))
+    (delete-region (car bounds) (cdr bounds))))
 
 (defun grammalecte--propertize-conjugation-buffer ()
   "Propertize some important words in the conjugation buffer."
@@ -526,27 +526,32 @@ The word is not removed from the `kill-ring'."
   (grammalecte--kill-ring-save-at-point (point) t))
 
 (defvar grammalecte-mode-map
-  (let ((map (make-sparse-keymap)))
-    (define-key map "o" #'other-window)
-    (define-key map "w" #'grammalecte-kill-ring-save)
-    (define-key map (kbd "<mouse-1>")
-      #'grammalecte-mouse-save-and-replace)
-    (define-key map (kbd "<RET>") #'grammalecte-save-and-replace)
-    map)
+  (define-keymap
+    "o" #'other-window
+    "w" #'grammalecte-kill-ring-save
+    "<mouse-1>" #'grammalecte-mouse-save-and-replace
+    "<RET>" #'grammalecte-save-and-replace)
   "Keymap for `grammalecte-mode'.")
 
+;; Make the compiler happy about old stuff
+(declare-function linum-mode "linum")
+
 (define-derived-mode grammalecte-mode special-mode
-  "Grammalecte mode"
-  "Major mode used to display results of a synonym research or
-conjugation table.
+  "Grammalecte"
+  "Major mode used to display results of a synonym research or conjugation table.
+
 The buffer is read-only.
-Type o to go back to your previous buffer.
+
+Type \\[other-window] to go back to your previous buffer.
+
 Type \\[grammalecte-kill-ring-save] to copy word at point in the
   grammalecte buffer in the `kill-ring' (and let you do whatever you
   want with it after).
+
 Type \\[grammalecte-save-and-replace] to replace the word at point in
   the buffer you came from by the one at point in the grammalecte
   buffer.  The word is not removed from the `kill-ring'.
+
 Click \\[grammalecte-mouse-save-and-replace] to replace the word at
   point in the buffer you came from by the one you just click in the
   grammalecte buffer.  The word is not removed from the `kill-ring'."
@@ -591,10 +596,9 @@ See URL `https://www.cnrtl.fr/definition/'.
 (defun grammalecte-define-at-point ()
   "Find definitions for the french word at point."
   (interactive)
-  (let ((word (thing-at-point 'word 'no-properties)))
-    (if word
-        (grammalecte-define word)
-      (call-interactively 'grammalecte-define))))
+  (if-let ((word (thing-at-point 'word 'no-properties)))
+      (grammalecte-define word)
+    (call-interactively 'grammalecte-define)))
 
 
 
@@ -621,10 +625,9 @@ The found words are then displayed in a new buffer in another window.
 (defun grammalecte-find-synonyms-at-point ()
   "Find french synonyms and antonyms for the word at point."
   (interactive)
-  (let ((word (thing-at-point 'word 'no-properties)))
-    (if word
-        (grammalecte-find-synonyms word)
-      (call-interactively 'grammalecte-find-synonyms))))
+  (if-let ((word (thing-at-point 'word 'no-properties)))
+      (grammalecte-find-synonyms word)
+    (call-interactively 'grammalecte-find-synonyms)))
 
 
 

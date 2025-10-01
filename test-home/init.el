@@ -8,7 +8,7 @@
       org-startup-folded "showeverything"
       grammalecte--debug-mode t)
 
-(dolist (path '("dash.el" "flycheck" "epl" "pkg-info"))
+(dolist (path '("dash.el" "flycheck" "epl"))
   (add-to-list 'load-path (format "%s-master" path)))
 
 (load (expand-file-name "grammalecte-loaddefs"))

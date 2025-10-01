@@ -1,14 +1,14 @@
 ;;; flycheck-grammalecte.el --- Integrate Grammalecte with Flycheck -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2018 Étienne Deparis
+;; Copyright (C) 2018 Étienne Pflieger
 ;; Copyright (C) 2017 Guilhem Doulcier
 
-;; Maintainer: Étienne Deparis <etienne@depar.is>
+;; Maintainer: Étienne Pflieger
 ;; Author: Guilhem Doulcier <guilhem.doulcier@espci.fr>
-;;         Étienne Deparis <etienne@depar.is>
+;;         Étienne Pflieger <etienne@pflieger.bzh>
 ;; Created: 21 February 2017
-;; Version: 2.4
-;; Package-Requires: ((emacs "26.1") (flycheck "26"))
+;; Version: 2.5
+;; Package-Requires: ((emacs "29.1") (flycheck "32"))
 ;; Keywords: i18n, text
 ;; Homepage: https://git.umaneti.net/flycheck-grammalecte/
 
@@ -39,8 +39,6 @@
 ;;; Code:
 
 (require 'flycheck)
-(unless (fboundp 'pkg-info-version-info)
-  (require 'pkg-info))
 
 ;; Version 2.0 introduced a major refactoring
 (dolist
@@ -69,7 +67,7 @@
   (define-obsolete-function-alias (car spec) (cadr spec) "2.0"))
 
 
-;; Make the compile happy about grammalecte lib
+;; Make the compiler happy about grammalecte lib
 (declare-function grammalecte--version "grammalecte")
 (declare-function grammalecte--augment-pythonpath-if-needed "grammalecte")
 (eval-when-compile
@@ -79,7 +77,7 @@
 ;;;; Configuration options:
 
 (defgroup flycheck-grammalecte nil
-  "Flycheck Grammalecte options"
+  "Flycheck Grammalecte options."
   :group 'flycheck-options
   :group 'grammalecte)
 
@@ -153,19 +151,19 @@ As these patterns will be used by the underlying python script,
 they must be python Regular Expressions (See URL
 `https://docs.python.org/3.5/library/re.html#regular-expression-syntax').
 
-Escape character `\\' must be doubled twice: one time for Emacs
+Escape character \\ must be doubled twice: one time for Emacs
 and one time for python.  For example, to exclude LaTeX math
 formulas, one can use :
 
     (setq flycheck-grammalecte-filters
-          '(\"\\$.*?\\$\"
+          \\='(\"\\$.*?\\$\"
             \"(?s)\\\\begin{equation}.*?\\\\end{equation}\"))
 
 For simple use case, you can try to use the function
 `flycheck-grammalecte--convert-elisp-rx-to-python'.
 
 Filters are applied sequentially.  In practice all characters of
-the matching pattern are replaced by `█', which are ignored by
+the matching pattern are replaced by █, which are ignored by
 grammalecte.
 
 This patterns are always sent to Grammalecte.  See the variable
@@ -235,7 +233,7 @@ another.  This activation is only done once when the function
 
 This function is called without arguments and shall return non-nil if
 flycheck-grammalecte shall be used to check the current buffer.  Otherwise it
-shall return nil. This function is only called in matching major modes (see
+shall return nil.  This function is only called in matching major modes (see
 `flycheck-grammalecte-enabled-modes'.
 
 For example, if you only want to have flycheck-grammalecte in french
@@ -243,28 +241,23 @@ documents, you may want to use something like:
 
     (setq flycheck-grammalecte-predicate
           (lambda ()
-            (or (and (derived-mode-p 'org-mode)
+            (or (and (derived-mode-p \\='org-mode)
                      (equal \"fr\"
-                            (or (cadar (org-collect-keywords '(\"LANGUAGE\")))
+                            (or (cadar (org-collect-keywords \\='(\"LANGUAGE\")))
                                 (bound-and-true-p
                                   org-export-default-language))))
-                (and (boundp 'ispell-local-dictionary)
+                (and (boundp \\='ispell-local-dictionary)
                      (member ispell-local-dictionary
-                             '(\"fr\" \"francais7\" \"francais-tex\"))))))"
+                             \\='(\"fr\" \"francais7\" \"francais-tex\"))))))"
   :type 'function
   :package-version "2.0"
   :group 'flycheck-grammalecte)
 
 (defconst flycheck-grammalecte--error-patterns
-  (if (< (string-to-number (flycheck-version nil)) 32)
-      '((warning line-start "grammaire|" (message) "|" line "|"
-                 (1+ digit) "|" column "|" (1+ digit) line-end)
-        (info line-start "orthographe|" (message) "|" line "|"
-              (1+ digit) "|" column "|" (1+ digit) line-end))
-    '((warning line-start "grammaire|" (message) "|" line "|" end-line
-               "|" column "|" end-column line-end)
-      (info line-start "orthographe|" (message) "|" line "|" end-line
-            "|" column "|" end-column line-end)))
+  '((warning line-start "grammaire|" (message) "|" line "|" end-line
+             "|" column "|" end-column line-end)
+    (info line-start "orthographe|" (message) "|" line "|" end-line
+          "|" column "|" end-column line-end))
   "External python command output matcher for Flycheck.
 
 It uses `rx' keywords, with some specific ones defined by Flycheck in
@@ -286,7 +279,7 @@ This function will return
 
 See URL
 `https://docs.python.org/3.5/library/re.html#regular-expression-syntax'
-and Info node `(elisp)Syntax of Regular Expressions'."
+and Info node `Regexps'."
   (let ((convtable '(("\\\\(" . "(")
                      ("\\\\)" . ")")
                      ("\\\\|" . "|")
@@ -328,27 +321,11 @@ and Info node `(elisp)Syntax of Regular Expressions'."
 
 (defun flycheck-grammalecte--patch-flycheck-mode-map ()
   "Add new commands to `flycheck-mode-map' if possible."
-  (let ((flycheck-version-number
-         (string-to-number (flycheck-version nil))))
-    (if (< flycheck-version-number 32)
-        (let ((warn-user-about-flycheck
-               (lambda (_arg)
-                 (display-warning
-                  'flycheck-grammalecte
-                  (format "Le remplacement des erreurs ne fonctionne qu'avec flycheck >= 32 (vous utilisez la version %s)."
-                          flycheck-version-number)))))
-          ;; Desactivate corrections methods
-          (advice-add 'flycheck-grammalecte-correct-error-at-click
-                      :override
-                      warn-user-about-flycheck)
-          (advice-add 'flycheck-grammalecte-correct-error-at-point
-                      :override
-                      warn-user-about-flycheck))
-      ;; Add our fixers to right click and C-c ! g
-      (define-key flycheck-mode-map (kbd "<mouse-3>")
-        #'flycheck-grammalecte-correct-error-at-click)
-      (define-key flycheck-command-map "g"
-        #'flycheck-grammalecte-correct-error-at-point))))
+  ;; Add our fixers to right click and C-c ! g
+  (keymap-set flycheck-mode-map "<mouse-3>"
+              #'flycheck-grammalecte-correct-error-at-click)
+  (keymap-set flycheck-command-map "g"
+              #'flycheck-grammalecte-correct-error-at-point))
 
 (defun flycheck-grammalecte--prepare-arg-list (arg items)
   "Build an arguments list for ARG from ITEMS elements.
@@ -407,37 +384,32 @@ flycheck-grammalecte can be used or not."
 This method replace the word at POS by the first suggestion coming from
 flycheck, if any."
   (interactive "d")
-  (let ((first-err (car-safe (flycheck-overlay-errors-at pos))))
-    (when first-err
-      (flycheck-grammalecte--fix-error
-       first-err
-       (cadr (flycheck-grammalecte--split-error-message first-err))))))
+  (when-let ((first-err (car-safe (flycheck-overlay-errors-at pos))))
+    (flycheck-grammalecte--fix-error
+     first-err
+     (cadr (flycheck-grammalecte--split-error-message first-err)))))
 
 (defun flycheck-grammalecte-correct-error-at-click (event)
   "Popup a menu to help correct error under mouse pos defined in EVENT."
   (interactive "e")
   (save-excursion
     (mouse-set-point event)
-    (let ((first-err (car-safe (flycheck-overlay-errors-at (point)))))
-      (when first-err
-        (let* ((region (flycheck-error-region-for-mode first-err major-mode))
-               (word (buffer-substring-no-properties (car region) (cdr region)))
-               (splitted-err (flycheck-grammalecte--split-error-message first-err))
-               repl-menu)
-          (setq repl-menu
-                (dolist (repl (cdr splitted-err) repl-menu)
-                  (push (list repl repl) repl-menu)))
-          ;; Add a reminder of the error message
-          (push (car splitted-err) repl-menu)
-          (flycheck-grammalecte--fix-error
-           first-err
-           (car-safe
-            (x-popup-menu
-             event
-             (list
-              (format "Corrections pour %s" word)
-              (cons "Suggestions de Grammalecte" repl-menu))))
-           region))))))
+    (when-let ((first-err (car-safe (flycheck-overlay-errors-at (point)))))
+      (let* ((region (flycheck-error-region-for-mode first-err major-mode))
+             (word (buffer-substring-no-properties (car region) (cdr region)))
+             (splitted-err (flycheck-grammalecte--split-error-message first-err))
+             (repl-menu (mapcar (lambda (elt) (list elt elt)) (cdr splitted-err))))
+        ;; Add a reminder of the error message
+        (push (car splitted-err) repl-menu)
+        (flycheck-grammalecte--fix-error
+         first-err
+         (car-safe
+          (x-popup-menu
+           event
+           (list
+            (format "Corrections pour %s" word)
+            (cons "Suggestions de Grammalecte" repl-menu))))
+         region)))))
 
 
 

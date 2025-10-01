@@ -127,7 +127,7 @@ Here is the minimal working configuration:
 
 #+begin_src emacs-lisp
   (use-package flycheck-grammalecte
-               :config (flycheck-grammalecte-setup))
+    :config (flycheck-grammalecte-setup))
 #+end_src
 
 However, you may want to configure it a little more, and be sure the
@@ -139,15 +139,15 @@ thus the list already exists.
 
 #+begin_src emacs-lisp
   (use-package flycheck-grammalecte
-               :hook (fountain-mode . flycheck-mode)
-               :init
-               (setq flycheck-grammalecte-report-apos nil
-                     flycheck-grammalecte-report-esp nil
-                     flycheck-grammalecte-report-nbsp nil)
-               :config
-               (add-to-list 'flycheck-grammalecte-enabled-modes 'fountain-mode)
-               (grammalecte-download-grammalecte)
-               (flycheck-grammalecte-setup))
+    :hook (fountain-mode . flycheck-mode)
+    :custom
+    (flycheck-grammalecte-report-apos nil)
+    (flycheck-grammalecte-report-esp nil)
+    (flycheck-grammalecte-report-nbsp nil)
+    :config
+    (add-to-list 'flycheck-grammalecte-enabled-modes 'fountain-mode)
+    (grammalecte-download-grammalecte)
+    (flycheck-grammalecte-setup))
 #+end_src
 
 

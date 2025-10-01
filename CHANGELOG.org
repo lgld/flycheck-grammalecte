@@ -1,3 +1,115 @@
+* Version 2.5
+
+** Features
+
+- Use new init-directory CLI arg of Emacs 29.1
+- Move away from deprecated autoload.el library
+
+** Fixes
+
+- Remove as much compilation warnings as possible
+- Avoid a crash when grammalecte-settings-file is broken
+- Remove 'mode' suffix from mode name
+- Do not reverse corrections proposals when building menu
+
+** Documentation
+
+- Fix a typo in a comment
+- Add missing changelog entries
+
+** Others
+
+- Change use-package indent / use :custom instead of :init setq
+- Split the latex example in its own file
+- Replace deprecated keymap related functions
+- Use {when,if}-let wherever possible
+
+* Version 2.4
+
+** Feature
+
+- Add flycheck-grammalecte-report-typo option
+
+** Documentation
+
+- Spelling corrections
+
+* Version 2.3
+
+** Fixes
+
+- Change CRISCO URL for new one
+
+* Version 2.2
+
+** Fixes
+
+- Change upstream URL to allow again download of grammalecte package
+
+* Version 2.1
+
+** Feature
+
+- Improve rendering of autoloads file
+- Add a test and document configuration with use-package
+
+** Fixes
+
+- Correctly check current-path in augment-pythonpath-if-needed
+- Avoid melpa package to contain a test file
+- Use setq-local for revert-buffer-function
+- Make sure to create a new file each time autoloads rule is called
+- Still match text between consecutive code blocks in org-mode (flycheck-grammalecte.el)
+- Avoid a compiler warning (flycheck-grammalecte.el)
+
+** Documentation
+
+- Change wording around self-promotting support links
+- Update CONTRIBUTING file
+- Add a github specific FUNDING.yml file
+
+** Other
+
+- Generify Makefile and require pkg-info on demand
+- tests: Enable debug-on-error and avoid poluting user directory in test-profile.el
+- tests: Use fully loaded Emacs for tests
+- Fix UTF8 usage on Microsoft Windows
+- Add proper whitespaces between functions (flycheck_grammalecte.py)
+- Homogeneize quotation mark style (flycheck_grammalecte.py)
+- Homogeneize utf8 codec name (flycheck_grammalecte.py)
+
+* Version 2.0
+
+** Feature
+
+- Split lisp library in two files
+- Improve satellite buffer creation and mode
+- Only check and download grammalecte every once in a while and improve
+  upstream version check mechanism
+- Download grammalecte through lisp for the demo
+- Improve Makefile
+- Add an autoloads target in Makefile
+- Add package-version tag to defcustoms
+- Make grammalecte-version argument optional in
+  grammalecte-download-grammalecte
+- Massive refactoring of flycheck-grammalecte-setup
+- Support :verify and :enabled options of flycheck-define-checker
+- Support flycheck :predicate property
+
+** Fixes
+
+- Go to point min after grammalecte special buffer revert
+- Make borders feature work again
+- Remove typo in lisp lib metadata
+- Remove useless test files from melpa package
+- Rename flycheck-grammalecte.py to flycheck_grammalecte.py
+
+** Documentation
+
+- Improve the flycheck-grammalecte-mode docstring
+- Add breaking changes for version 1.5 in the README
+- Mark moved variables and functions as obsolete
+
 * Version 1.4
 
 ** Fixes

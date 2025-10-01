@@ -19,9 +19,7 @@ grammalecte-loaddefs.el:
 	rm -f $@
 	$(EMACS) -L $(PWD) \
 		--eval "(setq-default backup-inhibited t)" \
-		--eval "(setq generated-autoload-file \"$(PWD)/$@\")" \
-		--eval "(update-directory-autoloads \"$(PWD)\")"
-	sed -i "s/^;;; Code:$$/;;; Code:\n\n$(subst ., ,$(LOADDEFS_TPL))/" $@
+		--eval "(loaddefs-generate \"$(PWD)\" \"$(PWD)/$@\" nil \"$(subst ., ,$(LOADDEFS_TPL))\")"
 
 grammalecte.elc:
 	$(EMACS) -f batch-byte-compile grammalecte.el
@@ -46,18 +44,18 @@ grammalecte:
 
 .PHONY: demo demo-deps demo-no-grammalecte demo-use-package
 
-EMACS_DEMO = HOME=$(PWD)/test-home emacs --debug-init
+EMACS_DEMO = emacs --init-directory "$(PWD)/test-home" --debug-init
 
 demo: demo-deps grammalecte
-	$(EMACS_DEMO) -l test-home/classic.el example.org
+	$(EMACS_DEMO) -l test-home/classic.el example.org example.tex
 
 demo-no-grammalecte: demo-deps
-	$(EMACS_DEMO) -l test-home/classic.el example.org
+	$(EMACS_DEMO) -l test-home/classic.el example.org example.tex
 
-demo-use-package: demo-deps use-package-master
-	$(EMACS_DEMO) -l test-home/use-package.el example.org
+demo-use-package: demo-deps
+	$(EMACS_DEMO) -l test-home/use-package.el example.org example.tex
 
-demo-deps: cleandemo build autoloads epl-master pkg-info-master
+demo-deps: cleandemo build autoloads epl-master
 	touch debug
 
 cleandemo:
@@ -67,9 +65,7 @@ cleandemo:
 
 ######### Dependencies
 
-use-package_author = jwiegley
 epl_author = cask
-pkg-info_author = emacsorphanage
 dash.el_author = magnars
 flycheck_author = flycheck
 
